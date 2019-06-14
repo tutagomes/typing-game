@@ -5,8 +5,17 @@
       <div v-if="mostraTimer || pontos > 0">Pontos: {{pontos}}</div>
       <br>
       <q-btn color="primary" label="Iniciar" v-if="mostraBotao" @click="inicioJogo()"/>
-      <q-scroll-area ref='scroll' style="height: 400px; padding: 30px" class="bg-grey-1 full-width justify-center">
-        <div class="no-wrap justify-center" style="text-align: center; padding-bottom: 400px">
+            <q-circular-progress
+      show-value
+      class="q-ma-md"
+      :value="value"
+      size="600px"
+      :thickness="0.25"
+      color="primary"
+      track-color="grey-3"
+    >
+      <q-scroll-area ref='scroll' style="height: 380px; padding: 30px; " class="full-width justify-center">
+        <div class="no-wrap justify-center" style="text-align: center; padding-bottom: 400px;font-size: 0.3em !important">
         <div v-for="(plv, index) in listaPalavras" :key="index" style='margin: 0px 10px 0px 10px; '>
           <div v-if="palavraAtual < index" >
             <a :style="{textDecoration: plv.decoration}">{{plv.palavra}}</a>
@@ -22,6 +31,7 @@
         </div>
         </div>
       </q-scroll-area>
+    </q-circular-progress>
     </div>
   </q-page>
 </template>
@@ -72,7 +82,8 @@ export default {
       mostraBotao: true,
       timer: "",
       mostraTimer: false,
-      intervalo: null
+      intervalo: null,
+      value: 100
     }
   },
   created() {
@@ -107,7 +118,7 @@ export default {
     pegaPalavraNova() {
       if (this.palavraAtual > -1) {
         this.listaPalavras[this.palavraAtual].decoration = "line-through"
-        this.$refs.scroll.setScrollPosition(this.palavraAtual*40)
+        this.$refs.scroll.setScrollPosition(this.palavraAtual*46)
       }
       this.palavraAtual++
 
@@ -138,7 +149,7 @@ export default {
         seconds = seconds < 10 ? "0" + seconds : seconds
 
         self.timer = minutes + ":" + seconds
-
+        self.value = (timer/duration)*100
         if (--timer < 0) {
           self.mostraBotao = true
           self.mostraTimer = false
